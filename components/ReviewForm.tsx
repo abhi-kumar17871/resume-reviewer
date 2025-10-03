@@ -12,7 +12,9 @@ interface ReviewFormProps {
 }
 
 export default function ReviewForm({ resumeId, initialStatus, initialScore, initialNotes, onSave, onClose }: ReviewFormProps) {
-    const [status, setStatus] = useState(initialStatus === 'In Review' ? '' : initialStatus);
+    const [status, setStatus] = useState(
+        initialStatus === 'In Review' ? 'Approved' : initialStatus
+    );
     const [score, setScore] = useState(initialScore ? initialScore.toString() : '');
     const [notes, setNotes] = useState(initialNotes || '');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,10 +24,7 @@ export default function ReviewForm({ resumeId, initialStatus, initialScore, init
         e.preventDefault();
         setError(null);
 
-        if (!status) {
-            setStatus("Approved");
-            return;
-        }
+        const finalStatus = status || 'Approved';
 
         setIsSubmitting(true);
 
@@ -36,7 +35,7 @@ export default function ReviewForm({ resumeId, initialStatus, initialScore, init
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    status,
+                    status: finalStatus,
                     score,
                     notes
                 }),
@@ -67,6 +66,7 @@ export default function ReviewForm({ resumeId, initialStatus, initialScore, init
                 <label className="block text-sm mb-1">Status</label>
                 <select
                     name="status"
+                    value={status}              
                     onChange={(e) => setStatus(e.target.value)}
                     className="border rounded px-2 py-1"
                     disabled={isSubmitting}
@@ -82,7 +82,7 @@ export default function ReviewForm({ resumeId, initialStatus, initialScore, init
                 <input
                     type="number"
                     name="score"
-                    defaultValue={score}
+                    value={score}              
                     onChange={(e) => setScore(e.target.value)}
                     className="border rounded px-2 py-1"
                     disabled={isSubmitting}
@@ -93,24 +93,29 @@ export default function ReviewForm({ resumeId, initialStatus, initialScore, init
                 <label className="block text-sm mb-1">Notes</label>
                 <textarea
                     name="notes"
-                    defaultValue={notes}
+                    value={notes}              
                     onChange={(e) => setNotes(e.target.value)}
                     className="border rounded px-2 py-1 w-full"
                     rows={4}
                     disabled={isSubmitting}
                 />
             </div>
-            <div className='flex justify-start gap-4 '>
-            <button
-                type="submit"
-                className="w-24 bg-gray-300 hover:bg-gray-700 hover:text-white h-12 px-8 font-bold rounded-md flex justify-center items-center"
-                disabled={isSubmitting}
-            >
-                {isSubmitting ? 'Saving...' : 'Save'}
-            </button>
-            <button type="button" onClick={onClose} className="w-24 border-gray-600 rounded-md border-2 h-12 px-8 bg-transparent flex justify-center items-center hover:bg-gray-200">
-                Close
-            </button>
+
+            <div className="flex justify-start gap-4">
+                <button
+                    type="submit"
+                    className="w-24 bg-gray-300 hover:bg-gray-700 hover:text-white h-12 px-8 font-bold rounded-md flex justify-center items-center"
+                    disabled={isSubmitting}
+                >
+                    {isSubmitting ? 'Saving...' : 'Save'}
+                </button>
+                <button
+                    type="button"
+                    onClick={onClose}
+                    className="w-24 border-gray-600 rounded-md border-2 h-12 px-8 bg-transparent flex justify-center items-center hover:bg-gray-200"
+                >
+                    Close
+                </button>
             </div>
         </form>
     );
