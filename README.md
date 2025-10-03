@@ -92,7 +92,7 @@ Follow these instructions to set up and run the project locally.
 * **Admin Panel**: A secure area for administrators to view all submissions and provide detailed reviews, including a score and notes.
 * **Modal-Based Review**: Admins can review resumes directly within a modal on the submissions page, which includes a PDF preview.
 * **Public Leaderboard**: A page showcasing the highest-scoring resumes to inspire users and add a competitive element.
-* **Email Notifications**: Automatic emails are sent to users when an admin updates the status of their resume/route.ts`].
+* **Email Notifications**: Automatic emails are sent to users when an admin updates the status of their resume.
 * **Notification Preferences**: Users can enable or disable email notifications from their settings page.
 
 ---
