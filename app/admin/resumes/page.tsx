@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import ReviewModal from '@/components/ReviewModal';
 import type { Resume } from '@/lib/types';

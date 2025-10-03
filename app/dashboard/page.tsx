@@ -54,7 +54,7 @@ export default async function DashboardPage() {
               <div>Score: <span className="font-bold">{resume.score ?? 'N/A'}</span></div>
               {resume.notes && (
                 <div>
-                  <div className="font-medium ">Reviewer Notes: <span className="whitespace-pre-wrap mt-1">"{resume.notes}"</span></div>
+                  <div className="font-medium ">Reviewer Notes: <span className="whitespace-pre-wrap mt-1">&quot;{resume.notes}&quot;</span></div>
                 </div>
               )}
               <div>Submitted on: <span className="font-bold">{new Date(resume.created_at).toLocaleString()}</span></div>

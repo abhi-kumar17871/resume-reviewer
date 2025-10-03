@@ -1,5 +1,5 @@
 import FaqAccordion from '@/components/FaqAccordion';
-import { Mail, LifeBuoy } from 'lucide-react';
+import { Mail } from 'lucide-react';
 
 const faqItems = [
   {
@@ -33,7 +33,7 @@ export default function HelpPage() {
             Help & Support
           </h1>
           <p className="mt-4 text-lg text-gray-600">
-            Have questions? We're here to help. Find answers to common questions below.
+            Have questions? We&apos;re here to help. Find answers to common questions below.
           </p>
         </div>
 
@@ -46,7 +46,7 @@ export default function HelpPage() {
         <div className="mt-16 text-center bg-gray-50 rounded-lg p-8">
           <h2 className="text-xl font-semibold">Still need help?</h2>
           <p className="mt-2 text-gray-600">
-            If you can't find the answer you're looking for, please reach out to our support team.
+            If you can&apos;t find the answer you&apos;re looking for, please reach out to our support team.
           </p>
           <a
             href="mailto:support@example.com"
