@@ -46,7 +46,7 @@ export default function AdminLoginPage() {
             placeholder="Password"
             className="w-full border rounded px-3 py-2"
           />
-          <button type="submit" disabled={loading} className="w-full bg-black text-white rounded px-3 py-2">
+          <button type="submit" disabled={loading} className="bg-gray-400 hover:bg-gray-700 w-full hover:text-white h-12 px-8 font-bold rounded-md flex justify-center items-center">
             {loading ? "Signing in..." : "Sign in"}
           </button>
           {error && <p className="text-red-600 text-sm">{error}</p>}

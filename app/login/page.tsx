@@ -41,7 +41,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-svh flex items-center justify-center p-6">
+    <div className="min-h-svh flex items-center justify-center">
       <div className="w-full max-w-md rounded-lg border p-6">
         <h1 className="text-2xl font-semibold mb-4">Login</h1>
         {userEmail ? (
@@ -64,7 +64,7 @@ export default function LoginPage() {
               placeholder="you@example.com"
               className="w-full border rounded px-3 py-2"
             />
-            <button type="submit" className="w-full bg-black text-white rounded px-3 py-2">
+            <button type="submit" className="bg-gray-400 hover:bg-gray-700 w-full hover:text-white h-12 px-8 font-bold rounded-md flex justify-center items-center">
               Send Magic Link
             </button>
             <div className="text-center mt-4">

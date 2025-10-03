@@ -10,7 +10,7 @@ export default function DashboardUploadButton() {
     <>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="bg-black text-white rounded-md px-6 py-2 font-semibold hover:bg-gray-800 transition-colors"
+        className="bg-gray-300 hover:bg-gray-700 hover:text-white h-12 px-8 font-bold rounded-md flex justify-center items-center"
       >
         Upload Resume
       </button>

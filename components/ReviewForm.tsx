@@ -104,7 +104,7 @@ export default function ReviewForm({ resumeId, initialStatus, initialScore, init
             <div className="flex justify-start gap-4">
                 <button
                     type="submit"
-                    className="w-24 bg-gray-300 hover:bg-gray-700 hover:text-white h-12 px-8 font-bold rounded-md flex justify-center items-center"
+                    className="w-24 bg-gray-400 hover:bg-gray-700 hover:text-white h-12 px-8 font-bold rounded-md flex justify-center items-center"
                     disabled={isSubmitting}
                 >
                     {isSubmitting ? 'Saving...' : 'Save'}

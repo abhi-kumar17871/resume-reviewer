@@ -43,14 +43,14 @@ export default function HelpPage() {
           </div>
         </div>
 
-        <div className="mt-16 text-center bg-gray-50 rounded-lg p-8">
+        <div className="mt-16 text-center rounded-lg p-8">
           <h2 className="text-xl font-semibold">Still need help?</h2>
           <p className="mt-2 text-gray-600">
             If you can&apos;t find the answer you&apos;re looking for, please reach out to our support team.
           </p>
           <a
-            href="mailto:support@example.com"
-            className="mt-6 inline-flex items-center justify-center gap-2 rounded-md bg-black px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+            href="mailto:alpha54145@gmail.com"
+            className="mt-6 inline-flex items-center justify-center gap-2 rounded-md bg-gray-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
           >
             <Mail size={16} />
             Contact Support
