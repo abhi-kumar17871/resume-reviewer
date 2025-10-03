@@ -25,6 +25,7 @@ export async function POST(request: Request) {
     const { error: uploadError } = await supabase.storage
       .from("resumes")
       .upload(filePath, file, { contentType: "application/pdf", upsert: false });
+    
     if (uploadError) {
       return NextResponse.json({ error: uploadError.message }, { status: 500 });
     }
@@ -32,7 +33,10 @@ export async function POST(request: Request) {
     const { error: insertError } = await supabase
       .from("resumes")
       .insert({ user_id: user.id, file_path: filePath, status: "In Review" });
+      
     if (insertError) {
+      console.error("Database insert failed, cleaning up storage:", insertError.message);
+      await supabase.storage.from("resumes").remove([filePath]);
       return NextResponse.json({ error: insertError.message }, { status: 500 });
     }
 

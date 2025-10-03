@@ -1,6 +1,7 @@
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import DashboardSidebar from "@/components/DashboardSidebar";
+import { isAdminUser } from "@/lib/auth/admin";
 
 export default async function DashboardLayout({
   children,
@@ -14,6 +15,10 @@ export default async function DashboardLayout({
 
   if (!user) {
     redirect("/login");
+  }
+
+  if (isAdminUser(user.email)) {
+    redirect("/admin/resumes");
   }
 
   return (

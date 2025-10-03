@@ -97,7 +97,6 @@ export default function UploadModal({ onClose }: { onClose: () => void }) {
 
                     ) : (
                         <div>
-                            <p className="mb-2 text-sm font-medium">Preview:</p>
                             <embed src={previewUrl!} type="application/pdf" width="100%" height="400px" className="border rounded-md" />
                         </div>
                     )}

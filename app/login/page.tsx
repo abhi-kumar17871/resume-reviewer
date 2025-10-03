@@ -71,8 +71,8 @@ export default function LoginPage() {
           </form>
         )}
         <div className="text-center mt-4">
-          <Link href="/admin/login" className="text-sm text-gray-600 dark:text-gray-400 hover:underline">
-            Admin Login
+          <Link href="/admin/login" className="text-sm text-gray-800 hover:underline">
+            Click here for Admin login!!
           </Link>
         </div>
       </div>

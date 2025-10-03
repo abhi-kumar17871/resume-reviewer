@@ -16,7 +16,7 @@ export default function Home() {
           Upload your resume and receive professional feedback with detailed scores and actionable insights to land your dream job.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Link href="/login" className="bg-gray-400 hover:bg-gray-700 hover:text-white h-12 px-8 font-bold rounded-md flex justify-center items-center">
+          <Link href="/login" className="bg-gray-300 hover:bg-gray-700 hover:text-white h-12 px-8 font-bold rounded-md flex justify-center items-center">
             Submit Your Resume
           </Link>
           <Link href="/leaderboard" className="border-gray-600 rounded-md border-2 h-12 px-8 bg-transparent flex justify-center items-center hover:bg-gray-200">

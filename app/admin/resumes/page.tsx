@@ -1,50 +1,53 @@
-import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { isAdminUser } from "@/lib/auth/admin";
-import Link from "next/link";
+'use client';
 
-type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import ReviewModal from '@/components/ReviewModal';
+import type { Resume } from '@/lib/types';
+import { getResumesWithEmails } from '@/app/actions/admin';
 
-export default async function AdminResumesPage(props: { searchParams: SearchParams }) {
-  const searchParams = await props.searchParams;
-  const supabase = getSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user || !isAdminUser(user.email)) {
-    return (
-      <div className="min-h-svh flex items-center justify-center p-6">
-        <div className="text-center">
-          <p className="mb-4">Admins only.</p>
-          <Link href="/login" className="underline">Go to login</Link>
-        </div>
-      </div>
-    );
-  }
+export default function AdminResumesPage() {
+  const [resumes, setResumes] = useState<(Resume & { email: string })[]>([]);
+  const [selectedResume, setSelectedResume] = useState<Resume | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const { data: rows, error } = await supabase
-    .from("resumes")
-    .select("id, user_id, created_at, status, score")
-    .order("created_at", { ascending: false });
+  const fetchResumes = async () => {
+    const { resumes: fetchedResumes, error: fetchError } = await getResumesWithEmails();
+    if (fetchError) {
+      setError(fetchError);
+    } else if (fetchedResumes) {
+      setResumes(fetchedResumes);
+    }
+  };
+
+  useEffect(() => {
+    fetchResumes();
+  }, []);
+
+  const handleReviewClick = (resume: Resume) => {
+    setSelectedResume(resume);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedResume(null);
+  };
+
+  const handleReviewSave = () => {
+    fetchResumes();
+    setSelectedResume(null);
+  };
 
   if (error) {
-    return <div className="p-6">Error: {error.message}</div>;
+    return <div className="p-6">Error: {error}</div>;
   }
-
-  const successMessage = searchParams.success;
 
   return (
     <div className="min-h-svh p-6 space-y-6">
       <h1 className="text-2xl font-semibold">All Submissions</h1>
-      
-      {successMessage && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-          {successMessage}
-        </div>
-      )}
-      
+
       <table className="w-full text-sm border">
         <thead>
-          <tr className="bg-dark-200 text-blue-50">
+          <tr className="bg-dark-200">
             <th className="p-2 text-left">ID</th>
             <th className="p-2 text-left">User</th>
             <th className="p-2 text-left">Created</th>
@@ -54,22 +57,31 @@ export default async function AdminResumesPage(props: { searchParams: SearchPara
           </tr>
         </thead>
         <tbody>
-          {rows?.map((r) => (
+          {resumes?.map((r) => (
             <tr key={r.id} className="border-t">
               <td className="p-2">{r.id}</td>
-              <td className="p-2">{r.user_id}</td>
-              <td className="p-2">{new Date(r.created_at as string).toLocaleString()}</td>
+              <td className="p-2">{r.email}</td>
+              <td className="p-2">
+                {new Date(r.created_at as string).toLocaleString()}
+              </td>
               <td className="p-2">{r.status}</td>
               <td className="p-2">{r.score}</td>
               <td className="p-2">
-                <Link href={`/admin/review/${r.id}`} className="underline">Review</Link>
+                <button onClick={() => handleReviewClick(r)} className="underline">
+                  Review
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      {selectedResume && (
+        <ReviewModal
+          resume={selectedResume}
+          onClose={handleCloseModal}
+          onSave={handleReviewSave}
+        />
+      )}
     </div>
   );
 }
-
-

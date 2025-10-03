@@ -5,24 +5,35 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useEffect, useState } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
+import { isAdminUser } from '@/lib/auth/admin';
 
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const supabase = createSupabaseBrowserClient();
 
   useEffect(() => {
+    const updateUserStatus = (currentUser: User | null) => {
+      setUser(currentUser);
+      if (currentUser && currentUser.email) {
+        setIsAdmin(isAdminUser(currentUser.email));
+      } else {
+        setIsAdmin(false);
+      }
+      setLoading(false);
+    };
+
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-      setLoading(false);
+      updateUserStatus(user);
     };
 
     getUser();
 
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null);
+      updateUserStatus(session?.user ?? null);
     });
 
     return () => {
@@ -32,7 +43,8 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.refresh();
+    setIsAdmin(false);
+    router.push('/')
   };
 
   return (
@@ -41,7 +53,6 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0">
-              {/* You can replace this with your logo */}
               <span className="pl-8 text-2xl font-bold">ResumeReview</span>
             </Link>
           </div>
@@ -53,14 +64,33 @@ export default function Navbar() {
               >
                 Leaderboard
               </Link>
+              
+              {/* 4. Conditionally render buttons based on user and admin state */}
               {!loading && (
                 user ? (
-                  <button
-                    onClick={handleLogout}
-                    className="w-28 text-gray-700 hover:bg-gray-200 hover:text-black px-3 py-2 rounded-md text-sm font-medium border-2 border-gray-100 flex items-center justify-center"
-                  >
-                    Logout
-                  </button>
+                  <>
+                    {isAdmin ? (
+                      <Link
+                        href="/admin/resumes"
+                        className="w-28 text-gray-700 hover:bg-gray-200 hover:text-black px-3 py-2 rounded-md text-sm font-medium border-2 border-gray-100 flex items-center justify-center"
+                      >
+                        Submissions
+                      </Link>
+                    ) : (
+                      <Link
+                        href="/dashboard"
+                        className="w-28 text-gray-700 hover:bg-gray-200 hover:text-black px-3 py-2 rounded-md text-sm font-medium border-2 border-gray-100 flex items-center justify-center"
+                      >
+                        Dashboard
+                      </Link>
+                    )}
+                    <button
+                      onClick={handleLogout}
+                      className="w-28 text-gray-700 hover:bg-gray-200 hover:text-black px-3 py-2 rounded-md text-sm font-medium border-2 border-gray-100 flex items-center justify-center"
+                    >
+                      Logout
+                    </button>
+                  </>
                 ) : (
                   <Link
                     href="/login"

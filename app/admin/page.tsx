@@ -1,6 +1,6 @@
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { isAdminUser } from "@/lib/auth/admin";
-import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function AdminPage() {
   const supabase = getSupabaseServerClient();
@@ -9,14 +9,7 @@ export default async function AdminPage() {
   } = await supabase.auth.getUser();
 
   if (!user || !isAdminUser(user.email)) {
-    return (
-      <div className="min-h-svh flex items-center justify-center p-6">
-        <div className="text-center">
-          <p className="mb-4">Admins only.</p>
-          <Link href="/login" className="underline">Go to login</Link>
-        </div>
-      </div>
-    );
+      redirect("/login");
   }
 
   return (
