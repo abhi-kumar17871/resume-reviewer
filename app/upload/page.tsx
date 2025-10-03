@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
+
 export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -41,8 +42,9 @@ export default function UploadPage() {
       }
       setSuccess(true);
       setFile(null);
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : "An unknown error occurred";
+      setError(message);
     } finally {
       setUploading(false);
     }
@@ -56,17 +58,13 @@ export default function UploadPage() {
         className={`border-2 border-dashed rounded p-8 text-center ${isDragActive ? "bg-gray-50" : ""}`}
       >
         <input {...getInputProps()} />
-        {isDragActive ? <p>Drop the PDF here ...</p> : <p>Drag 'n' drop a PDF here, or click to select</p>}
+        {isDragActive ? <p>Drop the PDF here ...</p> : <p>Drag &apos;n&apos; drop a PDF here, or click to select</p>}
       </div>
       {file && (
         <div className="space-y-3">
           <p className="text-sm">Selected: {file.name}</p>
           <div className="h-[600px] border rounded">
-            <iframe
-              src={URL.createObjectURL(file)}
-              className="w-full h-full"
-              title="PDF Preview"
-            />
+            <embed src={URL.createObjectURL(file)} type="application/pdf" width="100%" height="100%" />
           </div>
           <button
             onClick={handleUpload}
@@ -82,5 +80,3 @@ export default function UploadPage() {
     </div>
   );
 }
-
-

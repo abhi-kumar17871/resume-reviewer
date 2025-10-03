@@ -1,5 +1,11 @@
 import { cookies as nextCookies } from "next/headers";
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
+
+type CookieStore = {
+  get: (name: string) => { value: string | undefined } | undefined;
+  set: (name: string, value: string, options: CookieOptions) => void;
+  delete: (name: string, options: CookieOptions) => void;
+};
 
 export function getSupabaseServerClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
@@ -11,29 +17,22 @@ export function getSupabaseServerClient() {
 
   return createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
-      async get(name) {
-        const store = await (nextCookies as unknown as () => Promise<any>)();
+      async get(name: string) {
+        const store = await (nextCookies as unknown as () => Promise<CookieStore>)();
         return store.get(name)?.value;
       },
       async set(name, value, options) {
         try {
-          const store = await (nextCookies as unknown as () => Promise<any>)();
-          store.set({ name, value, ...options });
+          const store = await (nextCookies as unknown as () => Promise<CookieStore>)();
+          store.set(name, value, options);
         } catch {}
       },
       async remove(name, options) {
         try {
-          const store = await (nextCookies as unknown as () => Promise<any>)();
-          // Prefer delete; fallback to setting empty value if delete not available
-          if (typeof store.delete === "function") {
-            store.delete({ name, ...options });
-          } else {
-            store.set({ name, value: "", ...options });
-          }
+          const store = await (nextCookies as unknown as () => Promise<CookieStore>)();
+          store.delete(name, options);
         } catch {}
       },
     },
   });
 }
-
-

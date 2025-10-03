@@ -61,7 +61,7 @@ export default async function DashboardPage() {
             </div>
           )}
           {signedUrl ? (
-            <iframe src={signedUrl} className="w-full h-[70vh] border rounded" />
+            <embed src={signedUrl} width="100%" height="600px" />
           ) : (
             <p className="text-sm">No preview available.</p>
           )}

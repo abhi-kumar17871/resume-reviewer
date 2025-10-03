@@ -16,13 +16,12 @@ export default function AdminLoginPage() {
     setError(null);
     setLoading(true);
     const supabase = createSupabaseBrowserClient();
-    const { data, error: err } = await supabase.auth.signInWithPassword({ email, password });
+    const { error: err } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (err) {
       setError(err.message);
       return;
     }
-    // Optionally: verify admin on client and route, server will protect pages too
     router.replace("/admin/resumes");
   }
 
@@ -56,5 +55,3 @@ export default function AdminLoginPage() {
     </div>
   );
 }
-
-
