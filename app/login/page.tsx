@@ -20,11 +20,12 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
     const supabase = createSupabaseBrowserClient();
+    const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`;
     const origin = window.location.origin;
     const { error: err } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${origin}/auth/callback`,
+        emailRedirectTo: redirectTo,
       },
     });
     if (err) setError(err.message);
