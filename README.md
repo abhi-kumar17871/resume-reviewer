@@ -25,7 +25,7 @@ This project is built with a modern, full-stack TypeScript setup:
 * **Styling**: **Tailwind CSS** - A utility-first CSS framework used for rapidly building a modern and responsive user interface.
 * **UI Components**: Primarily custom components, using **`lucide-react`** for icons.
 * **File Uploads**: **`react-dropzone`** is used to provide a user-friendly drag-and-drop interface for uploading resumes.
-* **Email Notifications**: **Nodemailer** is used on the backend to send email notifications to users when their resume status is updated/route.ts`].
+* **Email Notifications**: **Nodemailer** is used on the backend to send email notifications to users when their resume status is updated.
 * **Language**: **TypeScript** - Used across the entire project for type safety, better developer experience, and more maintainable code.
 
 ---
