@@ -39,17 +39,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  if (!updatedRow) {
-    return NextResponse.json({ success: true, message: 'Review updated, but no matching row found.' });
-  }
-
-  let email: string | null = null;
-  if (updatedRow.user_id) {
-    const { data: userData } = await supabaseAdmin.auth.admin.getUserById(updatedRow.user_id);
-    email = userData?.user?.email ?? null;
+  if (!updatedRow || !updatedRow.user_id) {
+    return NextResponse.json({ success: true, message: 'Review updated, but no user found for notification.' });
   }
   
-  if (email) {
+  const { data: userData } = await supabaseAdmin.auth.admin.getUserById(updatedRow.user_id);
+  
+  const email = userData?.user?.email ?? null;
+
+  const wantsEmail = userData?.user?.user_metadata?.email_notifications_enabled ?? true;
+  
+  if (email && wantsEmail) {
     try {
       const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -65,7 +65,8 @@ export async function POST(request: NextRequest) {
         html: `<div>
           <p>Hi,</p>
           <p>Your resume status has been updated to <strong>${status}</strong>.</p>
-          ${notes ? `<p>Notes:</p><pre>${notes}</pre>` : ""}
+          ${score ? `<p><strong>Score:</strong> ${score}</p>` : ''}
+          ${notes ? `<p><strong>Notes:</strong></p><pre style="white-space: pre-wrap; font-family: inherit;">${notes}</pre>` : ""}
           <p>Thanks for using the Resume Reviewer platform.</p>
         </div>`,
       };
@@ -76,6 +77,8 @@ export async function POST(request: NextRequest) {
     } catch (emailError) {
       console.error('Error sending email with Nodemailer:', emailError);
     }
+  } else if (email && !wantsEmail) {
+    console.log(`User ${email} has notifications turned off. Skipping email.`);
   }
 
   return NextResponse.json({ success: true, message: 'Review updated successfully' });

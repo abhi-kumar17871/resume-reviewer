@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -21,7 +22,6 @@ export default function LoginPage() {
     setError(null);
     const supabase = createSupabaseBrowserClient();
     const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`;
-    const origin = window.location.origin;
     const { error: err } = await supabase.auth.signInWithOtp({
       email,
       options: {
@@ -70,9 +70,12 @@ export default function LoginPage() {
             {error && <p className="text-red-600 text-sm">{error}</p>}
           </form>
         )}
+        <div className="text-center mt-4">
+          <Link href="/admin/login" className="text-sm text-gray-600 dark:text-gray-400 hover:underline">
+            Admin Login
+          </Link>
+        </div>
       </div>
     </div>
   );
 }
-
-

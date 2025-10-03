@@ -31,7 +31,7 @@ export async function POST(request: Request) {
 
     const { error: insertError } = await supabase
       .from("resumes")
-      .insert({ user_id: user.id, file_path: filePath, status: "Submitted" });
+      .insert({ user_id: user.id, file_path: filePath, status: "In Review" });
     if (insertError) {
       return NextResponse.json({ error: insertError.message }, { status: 500 });
     }
