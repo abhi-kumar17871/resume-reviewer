@@ -2,9 +2,45 @@
 
 import Link from "next/link";
 import { Upload, Users, Award, Shield } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { isAdminUser } from "@/lib/auth/admin";
+import type { User } from "@supabase/supabase-js";
 
 export default function Home() {
+  const [submitUrl, setSubmitUrl] = useState("/login");
+
+  useEffect(() => {
+    const supabase = createSupabaseBrowserClient();
+    const updateUserStatus = (currentUser: User | null) => {
+      if (currentUser && currentUser.email) {
+        if (isAdminUser(currentUser.email)) {
+          setSubmitUrl("/admin/resumes");
+        } else {
+          setSubmitUrl("/dashboard");
+        }
+      } else {
+        setSubmitUrl("/login");
+      }
+    };
+
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      updateUserStatus(user);
+    };
+
+    getUser();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      updateUserStatus(session?.user ?? null);
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
   return (
     <main>
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4">
@@ -16,7 +52,7 @@ export default function Home() {
           Upload your resume and receive professional feedback with detailed scores and actionable insights to land your dream job.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Link href="/login" className="bg-gray-300 hover:bg-gray-700 hover:text-white h-12 px-8 font-bold rounded-md flex justify-center items-center">
+          <Link href={submitUrl} className="bg-gray-300 hover:bg-gray-700 hover:text-white h-12 px-8 font-bold rounded-md flex justify-center items-center">
             Submit Your Resume
           </Link>
           <Link href="/leaderboard" className="border-gray-600 rounded-md border-2 h-12 px-8 bg-transparent flex justify-center items-center hover:bg-gray-200">

@@ -67,14 +67,14 @@ export default function LoginPage() {
             <button type="submit" className="w-full bg-black text-white rounded px-3 py-2">
               Send Magic Link
             </button>
+            <div className="text-center mt-4">
+              <Link href="/admin/login" className="text-sm text-gray-800 hover:underline">
+                Click here for Admin login!!
+              </Link>
+            </div>
             {error && <p className="text-red-600 text-sm">{error}</p>}
           </form>
         )}
-        <div className="text-center mt-4">
-          <Link href="/admin/login" className="text-sm text-gray-800 hover:underline">
-            Click here for Admin login!!
-          </Link>
-        </div>
       </div>
     </div>
   );
